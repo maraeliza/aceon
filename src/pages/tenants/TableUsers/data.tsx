@@ -1,9 +1,9 @@
 export interface Empresa {
-  id: number;
-  name: string;
-  phone: string;
-  cnpj: string;
-  address: string;
+  id: number
+  name: string
+  phone: string
+  cnpj: string
+  address: string
 }
 
 export const dataCompany: Empresa[] = [
@@ -77,5 +77,4 @@ export const dataCompany: Empresa[] = [
     cnpj: '01.234.567/0001-09',
     address: 'Avenida J, 707',
   },
-];
-
+]

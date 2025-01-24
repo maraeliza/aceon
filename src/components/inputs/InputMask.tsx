@@ -1,21 +1,21 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent } from 'react'
 import InputMask from 'react-input-mask'
 
-const onlyNumbers = (str: string): string => str.replace(/[^0-9]/g, "");
+const onlyNumbers = (str: string): string => str.replace(/[^0-9]/g, '')
 
 const setMask = (name: string): string | undefined => {
-  if (name.toLowerCase() === "cnpj") {
-    return "99.999.999/9999-99";
-  } else if (name.toLowerCase() === "cpf") {
-    return "999.999.999-99";
+  if (name.toLowerCase() === 'cnpj') {
+    return '99.999.999/9999-99'
+  } else if (name.toLowerCase() === 'cpf') {
+    return '999.999.999-99'
   }
-  return undefined; // Caso o nome não seja "cnpj" nem "cpf"
-};
+  return undefined // Caso o nome não seja "cnpj" nem "cpf"
+}
 
 interface MaskedInputProps {
-  value: string;
-  setValue: (value: React.ChangeEvent<HTMLInputElement>) => void;
-  name: string;
+  value: string
+  setValue: (value: React.ChangeEvent<HTMLInputElement>) => void
+  name: string
 }
 
 const MaskedInput: React.FC<MaskedInputProps> = ({ value, setValue, name }) => {
@@ -27,7 +27,7 @@ const MaskedInput: React.FC<MaskedInputProps> = ({ value, setValue, name }) => {
         name,
         value: onlyNumbers(event.target.value),
       },
-    });
+    })
   }
 
   return (
@@ -39,7 +39,7 @@ const MaskedInput: React.FC<MaskedInputProps> = ({ value, setValue, name }) => {
       className="input-field"
       required
     />
-  );
-};
+  )
+}
 
-export default MaskedInput;
+export default MaskedInput

@@ -13,12 +13,12 @@ import InboxIcon from '@mui/icons-material/Inbox'
 import DocumentScannerIcon from '@mui/icons-material/DocumentScanner'
 import Groups3Icon from '@mui/icons-material/Groups3'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
-import FlagIcon from '@mui/icons-material/Flag';
-import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
-import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import FlagIcon from '@mui/icons-material/Flag'
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium'
+import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 import { Navigation } from '@toolpad/core/AppProvider'
 import LockPersonIcon from '@mui/icons-material/LockPerson'
-import SensorOccupiedIcon from '@mui/icons-material/SensorOccupied';
+import SensorOccupiedIcon from '@mui/icons-material/SensorOccupied'
 const ImageLogo = () => {
   return (
     <img

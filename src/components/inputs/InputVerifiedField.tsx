@@ -1,6 +1,5 @@
 import { useState, useEffect, ChangeEventHandler } from 'react'
-import { MdClose, MdCheckCircle, MdInfo } from "react-icons/md";  // Ícones equivalentes da biblioteca react-icons
-
+import { MdClose, MdCheckCircle, MdInfo } from 'react-icons/md' // Ícones equivalentes da biblioteca react-icons
 
 interface InputVerifiedProps {
   icon: string

@@ -28,10 +28,9 @@ interface DemoProps {
   window?: () => Window
 }
 const branding: Branding = {
-    title: "Aceon",
-    logo: <img src={"https://i.postimg.cc/Y0mwTqpG/logo.png"}/>
+  title: 'Aceon',
+  logo: <img src={'https://i.postimg.cc/Y0mwTqpG/logo.png'} />,
 }
-
 
 export default function DashboardLayoutBasic(props: DemoProps) {
   const [pathname, setPathname] = React.useState('/login')
@@ -53,15 +52,9 @@ export default function DashboardLayoutBasic(props: DemoProps) {
       branding={branding}
     >
       {pathname === '/login' ? (
-        <PageLogin
-          setPathname={setPathname} 
-          router={router}
-        />
+        <PageLogin setPathname={setPathname} router={router} />
       ) : pathname === '/register' ? (
-        <PageRegister
-          setPathname={setPathname} 
-          router={router}
-        />
+        <PageRegister setPathname={setPathname} router={router} />
       ) : (
         <DashboardLayout>
           <PageContent pathname={pathname} />

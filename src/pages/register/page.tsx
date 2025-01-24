@@ -11,7 +11,12 @@ import {
   FormHelperText,
   Link,
 } from '@mui/material'
-import { isValidCNPJ, isValidCPF, isValidSenha, isValidEmail } from '@/utils/validateInputs'
+import {
+  isValidCNPJ,
+  isValidCPF,
+  isValidSenha,
+  isValidEmail,
+} from '@/utils/validateInputs'
 import routes from '@/configs/routes.json'
 import { Router } from '@toolpad/core/AppProvider'
 
@@ -106,7 +111,8 @@ const PageRegister = ({ router, setPathname }: Props) => {
                 type="email"
                 {...register('email', {
                   required: 'Email é obrigatório',
-                  validate: (value: string) => isValidEmail(value) || 'Email inválido',
+                  validate: (value: string) =>
+                    isValidEmail(value) || 'Email inválido',
                 })}
                 error={!!errors.email}
                 helperText={errors.email?.message}
@@ -121,7 +127,8 @@ const PageRegister = ({ router, setPathname }: Props) => {
                 type="text"
                 {...register('cnpj', {
                   required: 'CNPJ é obrigatório',
-                  validate: (value: string) => isValidCNPJ(value) || 'CNPJ inválido',
+                  validate: (value: string) =>
+                    isValidCNPJ(value) || 'CNPJ inválido',
                 })}
                 error={!!errors.cnpj}
                 helperText={errors.cnpj?.message}
@@ -139,7 +146,8 @@ const PageRegister = ({ router, setPathname }: Props) => {
                 type="text"
                 {...register('cpf', {
                   required: 'CPF é obrigatório',
-                  validate: (value: string) => isValidCPF(value) || 'CPF inválido',
+                  validate: (value: string) =>
+                    isValidCPF(value) || 'CPF inválido',
                 })}
                 error={!!errors.cpf}
                 helperText={errors.cpf?.message}
@@ -157,7 +165,8 @@ const PageRegister = ({ router, setPathname }: Props) => {
                 type="password"
                 {...register('senha', {
                   required: 'Senha é obrigatória',
-                  validate: (value: string) => isValidSenha(value) || 'Senha inválida',
+                  validate: (value: string) =>
+                    isValidSenha(value) || 'Senha inválida',
                 })}
                 error={!!errors.senha}
                 helperText={errors.senha?.message}

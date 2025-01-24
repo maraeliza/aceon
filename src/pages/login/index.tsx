@@ -73,105 +73,116 @@ const PageLogin = ({ router, setPathname }: Props) => {
   }
 
   return (
-    <Container
-      maxWidth="xs"
+    <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
         minHeight: '100vh',
-        padding: 2,
+        minWidth: '100vw',
       }}
     >
-      <Box
+      <Container
+        maxWidth="xs"
         sx={{
-          width: '100%',
-          padding: 4,
-          borderRadius: 2,
-          boxShadow: 3,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          padding: 2,
         }}
       >
-        <Typography variant="h5" align="center" sx={{ marginBottom: 3 }}>
-          LOGIN
-        </Typography>
-
-        <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="CNPJ"
-                variant="outlined"
-                error={!!errors.cnpj}
-                helperText={errors.cnpj ? errors.cnpj.message : ''}
-                {...register('cnpj', {
-                  required: 'CNPJ é obrigatório',
-                  validate: (value) => isValidCNPJ(value) || 'CNPJ inválido',
-                })}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="CPF"
-                variant="outlined"
-                error={!!errors.cpf}
-                helperText={errors.cpf ? errors.cpf.message : ''}
-                {...register('cpf', {
-                  required: 'CPF é obrigatório',
-                  validate: (value) => isValidCPF(value) || 'CPF inválido',
-                })}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Senha"
-                type="password"
-                variant="outlined"
-                error={!!errors.senha}
-                helperText={errors.senha ? errors.senha.message : ''}
-                {...register('senha', {
-                  required: 'Senha é obrigatória',
-                  validate: (value) => isValidSenha(value) || 'Senha inválida',
-                })}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Button
-                fullWidth
-                variant="contained"
-                type="submit"
-                disabled={loading}
-                sx={{ padding: '12px', fontSize: '16px' }}
-              >
-                {loading ? 'Carregando...' : 'Entrar'}
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-
-        {errorMessage && (
-          <Typography variant="body2" sx={{ color: 'red', marginTop: 2 }}>
-            {errorMessage}
+        <Box
+          sx={{
+            width: '100%',
+            padding: 4,
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          <Typography variant="h5" align="center" sx={{ marginBottom: 3 }}>
+            LOGIN
           </Typography>
-        )}
 
-        <Typography variant="body2" sx={{ marginTop: 2, textAlign: 'center' }}>
-          Não tem uma conta?{' '}
-          <Link
-            href="#/register"
-            onClick={() => setPathname('/register')}
-            color="primary"
+          <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="CNPJ"
+                  variant="outlined"
+                  error={!!errors.cnpj}
+                  helperText={errors.cnpj ? errors.cnpj.message : ''}
+                  {...register('cnpj', {
+                    required: 'CNPJ é obrigatório',
+                    validate: (value) => isValidCNPJ(value) || 'CNPJ inválido',
+                  })}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="CPF"
+                  variant="outlined"
+                  error={!!errors.cpf}
+                  helperText={errors.cpf ? errors.cpf.message : ''}
+                  {...register('cpf', {
+                    required: 'CPF é obrigatório',
+                    validate: (value) => isValidCPF(value) || 'CPF inválido',
+                  })}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Senha"
+                  type="password"
+                  variant="outlined"
+                  error={!!errors.senha}
+                  helperText={errors.senha ? errors.senha.message : ''}
+                  {...register('senha', {
+                    required: 'Senha é obrigatória',
+                    validate: (value) =>
+                      isValidSenha(value) || 'Senha inválida',
+                  })}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  type="submit"
+                  disabled={loading}
+                  sx={{ padding: '12px', fontSize: '16px' }}
+                >
+                  {loading ? 'Carregando...' : 'Entrar'}
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+
+          {errorMessage && (
+            <Typography variant="body2" sx={{ color: 'red', marginTop: 2 }}>
+              {errorMessage}
+            </Typography>
+          )}
+
+          <Typography
+            variant="body2"
+            sx={{ marginTop: 2, textAlign: 'center' }}
           >
-            Crie sua conta aqui
-          </Link>
-        </Typography>
-      </Box>
-    </Container>
+            Não tem uma conta?
+            <Link
+              href="#/register"
+              onClick={() => setPathname('/register')}
+              color="primary"
+            >
+              Crie sua conta aqui
+            </Link>
+          </Typography>
+        </Box>
+      </Container>
+    </Box>
   )
 }
 

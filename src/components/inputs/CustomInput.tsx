@@ -1,12 +1,16 @@
-import React, { ChangeEventHandler } from "react";
+import React, { ChangeEventHandler } from 'react'
 
 interface CustomInputProps {
-  name: string;
-  setValue: ChangeEventHandler<HTMLInputElement>;
-  setFocado: (focado: boolean) => void;
+  name: string
+  setValue: ChangeEventHandler<HTMLInputElement>
+  setFocado: (focado: boolean) => void
 }
 
-const CustomInput: React.FC<CustomInputProps> = ({ name, setValue, setFocado }) => {
+const CustomInput: React.FC<CustomInputProps> = ({
+  name,
+  setValue,
+  setFocado,
+}) => {
   return (
     <input
       type="text"
@@ -17,7 +21,7 @@ const CustomInput: React.FC<CustomInputProps> = ({ name, setValue, setFocado }) 
       onFocus={() => setFocado(true)}
       onBlur={() => setFocado(false)}
     />
-  );
-};
+  )
+}
 
-export default CustomInput;
+export default CustomInput

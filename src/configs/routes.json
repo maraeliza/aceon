@@ -1,5 +1,5 @@
 {
-    "basePath": "http://localhost:8080",
-    "registerUser": "/users/register",
-    "loginUser":"/users/login"
+  "basePath": "http://localhost:8080",
+  "registerUser": "/users/register",
+  "loginUser": "/users/login"
 }
