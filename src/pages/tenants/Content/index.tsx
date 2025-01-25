@@ -10,11 +10,12 @@ import {
   TextField,
   IconButton,
   InputAdornment,
+  Typography,
 } from '@mui/material'
 import { Delete, Edit, Search } from '@mui/icons-material'
 import { Tenant } from '@/utils/interfaces'
 import { ActionButtons } from '@/components/ActionButtons'
-import { getAllTenants } from '@/hooks/tenant/useTenant'
+import { getAllTenants, postTenant } from '@/hooks/tenant/useTenant'
 import { getAllPlans } from '@/hooks/plan/usePlan'
 import { getAllCountries } from '@/hooks/country/useCountries'
 
@@ -22,10 +23,10 @@ import ModalCriar from './ModalCriar'
 import ModalEditar from './ModalEditar'
 
 const Tabela: React.FC = () => {
+  
   const [tenants, setTenants] = useState<Tenant[]>([])
   const [searchTerm, setSearchTerm] = useState<string>('')
 
-  // Estados dos modais e dados
   const [openAddModal, setOpenAddModal] = useState<boolean>(false)
   const [openEditModal, setOpenEditModal] = useState<boolean>(false)
   const [newTenant, setNewTenant] = useState<Tenant>({
@@ -52,12 +53,9 @@ const Tabela: React.FC = () => {
     CNPJ: '',
     address: null,
   })
-
-  // Dados dos planos e países
   const [plans, setPlans] = useState<any[]>([])
   const [countries, setCountries] = useState<any[]>([])
 
-  // Carregar tenants, planos e países
   useEffect(() => {
     const fetchData = async () => {
       const tenantsData = await getAllTenants()
@@ -80,6 +78,7 @@ const Tabela: React.FC = () => {
     setOpenEditModal(true)
   }
 
+  
   const handleCloseEditModal = () => setOpenEditModal(false)
 
   const handleDelete = (id: number) => {
@@ -94,8 +93,15 @@ const Tabela: React.FC = () => {
     setTenants(filtered)
   }
 
+  const addNewTenant=(newTenant: Tenant)=>{
+    postTenant(newTenant)
+    setTenants([...tenants, newTenant])
+    setOpenAddModal(false)
+  }
+
   return (
     <div>
+      <Typography variant="h4">Gerenciamento de Empresas</Typography>
       <TextField
         label="Pesquisar Empresa"
         value={searchTerm}
@@ -154,7 +160,7 @@ const Tabela: React.FC = () => {
         onClose={handleCloseAddModal}
         newTenant={newTenant}
         setNewTenant={setNewTenant}
-        saveTenant={() => {}}
+        saveTenant={()=>addNewTenant(newTenant)}
         plans={plans}
         countries={countries}
       />

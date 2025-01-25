@@ -9,10 +9,9 @@ import {
   Grid2 as Grid,
 } from '@mui/material'
 import { InputMask as InputMasked } from '@react-input/mask'
-import InputMask from 'react-input-mask'
 import { Tenant } from '@/utils/interfaces'
 import styles from '@/styles/inputs.module.css'
-import { Label } from '@mui/icons-material'
+
 
 interface ModalCriarProps {
   open: boolean
@@ -23,33 +22,6 @@ interface ModalCriarProps {
   plans: any[]
   countries: any[]
 }
-const InputMaskCellphone = () => {
-  return (
-    <InputMasked
-      className={styles.input}
-      mask="(__) _____-____"
-      replacement={{ _: /\d/ }}
-      placeholder="(XX) XXXXX-XXXX"
-      showMask={true}
-    />
-  )
-}
-const InputMaskCNPJ = forwardRef<
-  HTMLInputElement,
-  InputHTMLAttributes<HTMLInputElement>
->(({ value, onChange, ...props }, ref) => {
-  return (
-    <InputMasked
-      {...props} // Passa outras propriedades
-      ref={ref} // Passa o ref
-      mask="__.___.___/____-__" // Máscara para CNPJ
-      replacement={{ _: /\d/ }} // Substituição para dígitos
-      placeholder="CNPJ: XX.XXX.XXX/XXXX-XX"
-      value={value} // Passa o valor
-      onChange={onChange} // Passa o onChange
-    />
-  )
-})
 
 const ModalCriar = ({
   open,
@@ -60,6 +32,7 @@ const ModalCriar = ({
   plans,
   countries,
 }: ModalCriarProps) => {
+  
   const handleInputChange = (e: any, field: keyof Tenant) => {
     setNewTenant({ ...newTenant, [field]: e.target.value })
   }
