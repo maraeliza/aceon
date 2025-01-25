@@ -12,7 +12,6 @@ import { InputMask as InputMasked } from '@react-input/mask'
 import { Tenant } from '@/utils/interfaces'
 import styles from '@/styles/inputs.module.css'
 
-
 interface ModalCriarProps {
   open: boolean
   onClose: () => void
@@ -32,7 +31,6 @@ const ModalCriar = ({
   plans,
   countries,
 }: ModalCriarProps) => {
-  
   const handleInputChange = (e: any, field: keyof Tenant) => {
     setNewTenant({ ...newTenant, [field]: e.target.value })
   }

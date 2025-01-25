@@ -23,7 +23,6 @@ import ModalCriar from './ModalCriar'
 import ModalEditar from './ModalEditar'
 
 const Tabela: React.FC = () => {
-  
   const [tenants, setTenants] = useState<Tenant[]>([])
   const [searchTerm, setSearchTerm] = useState<string>('')
 
@@ -78,7 +77,6 @@ const Tabela: React.FC = () => {
     setOpenEditModal(true)
   }
 
-  
   const handleCloseEditModal = () => setOpenEditModal(false)
 
   const handleDelete = (id: number) => {
@@ -93,7 +91,7 @@ const Tabela: React.FC = () => {
     setTenants(filtered)
   }
 
-  const addNewTenant=(newTenant: Tenant)=>{
+  const addNewTenant = (newTenant: Tenant) => {
     postTenant(newTenant)
     setTenants([...tenants, newTenant])
     setOpenAddModal(false)
@@ -160,7 +158,7 @@ const Tabela: React.FC = () => {
         onClose={handleCloseAddModal}
         newTenant={newTenant}
         setNewTenant={setNewTenant}
-        saveTenant={()=>addNewTenant(newTenant)}
+        saveTenant={() => addNewTenant(newTenant)}
         plans={plans}
         countries={countries}
       />
