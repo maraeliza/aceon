@@ -16,8 +16,13 @@ import {
   InputAdornment,
 } from '@mui/material'
 import { Delete, Edit, Search } from '@mui/icons-material'
-import { postPlan, deletePlan, updatePlan, getAllPlans } from './usePlan' // Importando as funções corretamente
-import { ActionButtons } from '../ActionButtons'
+import {
+  postPlan,
+  deletePlan,
+  updatePlan,
+  getAllPlans,
+} from '@/hooks/plan/usePlan'
+import { ActionButtons } from '@/components/ActionButtons'
 
 interface Plan {
   id: number

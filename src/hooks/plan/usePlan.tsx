@@ -1,9 +1,4 @@
-export interface Plan {
-  id: number
-  name: string
-  description: string
-  price: number
-}
+import { Plan } from '@/utils/interfaces'
 
 export const getAllPlans = async (): Promise<Plan[]> => {
   const response = await fetch('http://localhost:8080/plans/')
@@ -73,6 +68,7 @@ export const updatePlan = async (planId: number, updatedPlan: Plan) => {
       description: updatedPlan.description,
       price: updatedPlan.price,
     }
+
     const response = await fetch(
       `http://localhost:8080/plans/update/${planId}`,
       {

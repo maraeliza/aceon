@@ -63,9 +63,43 @@ export interface User {
   id: number
   name: string
 }
-
+export interface Country {
+  country_id: number
+  iso_code: string
+  name: string
+  flag_url: string
+}
 export interface Permission {
   name: string
   users: User[]
   groups: Group[]
+}
+export interface Tenant {
+  id: number
+  planId: number
+  countryId: number
+  statusId: number
+  signature: string
+  expiration: string
+  name: string
+  cellphone: string | null
+  CNPJ: string
+  address: string | null
+}
+
+export interface Plan {
+  id: number
+  name: string
+}
+
+export interface Status {
+  id: number
+  name: string
+}
+
+export interface Plan {
+  id: number
+  name: string
+  description: string
+  price: number
 }

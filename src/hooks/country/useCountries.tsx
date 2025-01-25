@@ -1,9 +1,4 @@
-export interface Country {
-  country_id: number
-  iso_code: string
-  name: string
-  flag_url: string
-}
+import { Country } from '@/utils/interfaces'
 
 export const getAllCountries = async (): Promise<Country[]> => {
   const response = await fetch('http://localhost:8080/countries/')

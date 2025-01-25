@@ -51,15 +51,19 @@ export default function DashboardLayoutBasic(props: DemoProps) {
       window={demoWindow}
       branding={branding}
     >
+      {/*
       {pathname === '/login' ? (
         <PageLogin setPathname={setPathname} router={router} />
       ) : pathname === '/register' ? (
         <PageRegister setPathname={setPathname} router={router} />
       ) : (
-        <DashboardLayout>
-          <PageContent pathname={pathname} />
-        </DashboardLayout>
-      )}
+       */}
+      <DashboardLayout>
+        <PageContent pathname={pathname} />
+      </DashboardLayout>
+      {
+        //)}
+      }
     </AppProvider>
   )
 }

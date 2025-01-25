@@ -17,13 +17,13 @@ import {
 } from '@mui/material'
 import { Delete, Edit, Add, Search } from '@mui/icons-material'
 import {
-  Country,
   deleteCountry,
   getAllCountries,
   postCountry,
   updateCountry,
-} from './useCountries'
-import { ActionButtons } from '../ActionButtons'
+} from '@/hooks/country/useCountries'
+import { ActionButtons } from '@/components/ActionButtons'
+import { Country } from '@/utils/interfaces'
 
 const initialCountries: Country[] = await getAllCountries()
 
