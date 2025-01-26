@@ -25,7 +25,7 @@ export const ActionButtons = ({ handleOpenAddModal }: ActionButtonsProps) => {
           sx={{
             backgroundColor: '#d32f2f',
             color: 'white',
-            borderRadius: '8px', // Bordas mais retas
+            borderRadius: '8px',
             '&:hover': {
               backgroundColor: '#b71c1c',
               transform: 'scale(1.1)',
@@ -43,7 +43,7 @@ export const ActionButtons = ({ handleOpenAddModal }: ActionButtonsProps) => {
           sx={{
             backgroundColor: '#1976d2',
             color: 'white',
-            borderRadius: '8px', // Bordas mais retas
+            borderRadius: '8px',
             '&:hover': {
               backgroundColor: '#1565c0',
               transform: 'scale(1.1)',
@@ -61,7 +61,7 @@ export const ActionButtons = ({ handleOpenAddModal }: ActionButtonsProps) => {
           sx={{
             backgroundColor: '#ff9800',
             color: 'white',
-            borderRadius: '8px', // Bordas mais retas
+            borderRadius: '8px',
             '&:hover': {
               backgroundColor: '#f57c00',
               transform: 'scale(1.1)',
@@ -74,13 +74,13 @@ export const ActionButtons = ({ handleOpenAddModal }: ActionButtonsProps) => {
         </IconButton>
       </Tooltip>
 
-      <Tooltip title="Adicionar Novo País">
+      <Tooltip title="Adicionar Novo">
         <IconButton
           onClick={handleOpenAddModal}
           sx={{
             backgroundColor: '#4caf50',
             color: 'white',
-            borderRadius: '8px', // Bordas mais retas
+            borderRadius: '8px', 
             '&:hover': {
               backgroundColor: '#388e3c',
               transform: 'scale(1.1)',

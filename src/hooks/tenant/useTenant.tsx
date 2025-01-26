@@ -1,4 +1,4 @@
-import { formatDate } from '@/utils/funcs'
+import { fmtDate, formatCNPJ, formatPhoneNumber } from '@/utils/funcs'
 import { Tenant } from '@/utils/interfaces'
 
 export const getAllTenants = async (): Promise<Tenant[]> => {
@@ -9,11 +9,11 @@ export const getAllTenants = async (): Promise<Tenant[]> => {
     planId: tenant.plan_id,
     countryId: tenant.country_id,
     statusId: tenant.status_id,
-    signature: formatDate(tenant.signature),
-    expiration: formatDate(tenant.expiration),
+    signature: fmtDate(tenant.signature),
+    expiration: fmtDate(tenant.expiration),
     name: tenant.name,
-    cellphone: tenant.cellphone,
-    CNPJ: tenant.CNPJ,
+    cellphone: formatPhoneNumber(tenant.cellphone),
+    CNPJ: formatCNPJ(tenant.CNPJ),
     address: tenant.address,
   }))
   return tenants
@@ -28,8 +28,8 @@ export const postTenant = async (newTenant: Tenant) => {
       signature: newTenant.signature,
       expiration: newTenant.expiration,
       name: newTenant.name,
-      cellphone: newTenant.cellphone,
-      CNPJ: newTenant.CNPJ,
+      cellphone: newTenant.cellphone?.replace(/\D/g, '') || '',
+      CNPJ: newTenant.CNPJ?.replace(/\D/g, '') || '',
       address: newTenant.address,
     }
     const response = await fetch('http://localhost:8080/tenants/register', {
@@ -61,7 +61,7 @@ export const deleteTenant = async (id: number) => {
         'Content-Type': 'application/json',
       },
     })
-
+    console.log(response)
     if (response.ok) {
       console.log('Tenant deletado com sucesso')
       return true
@@ -75,7 +75,7 @@ export const deleteTenant = async (id: number) => {
   }
 }
 
-export const updateTenant = async (tenantId: number, updatedTenant: Tenant) => {
+export const updateTenant = async (updatedTenant: Tenant) => {
   try {
     const tenantData = {
       planId: updatedTenant.planId,
@@ -84,13 +84,13 @@ export const updateTenant = async (tenantId: number, updatedTenant: Tenant) => {
       signature: updatedTenant.signature,
       expiration: updatedTenant.expiration,
       name: updatedTenant.name,
-      cellphone: updatedTenant.cellphone,
-      CNPJ: updatedTenant.CNPJ,
+      cellphone: updatedTenant.cellphone?.replace(/\D/g, '') || '',
+      CNPJ: updatedTenant.CNPJ?.replace(/\D/g, '') || '',
       address: updatedTenant.address,
     }
 
     const response = await fetch(
-      `http://localhost:8080/tenants/update/${tenantId}`,
+      `http://localhost:8080/tenants/update/${updatedTenant.id}`,
       {
         method: 'PUT',
         headers: {
@@ -99,6 +99,8 @@ export const updateTenant = async (tenantId: number, updatedTenant: Tenant) => {
         body: JSON.stringify(tenantData),
       },
     )
+    console.log(`http://localhost:8080/tenants/update/${updatedTenant.id}`)
+    console.log(response)
 
     if (response.ok) {
       const data = await response.json()

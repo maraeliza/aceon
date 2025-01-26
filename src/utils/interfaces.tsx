@@ -87,10 +87,7 @@ export interface Tenant {
   address: string | null
 }
 
-export interface Plan {
-  id: number
-  name: string
-}
+
 
 export interface Status {
   id: number

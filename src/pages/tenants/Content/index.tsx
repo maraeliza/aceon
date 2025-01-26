@@ -15,12 +15,17 @@ import {
 import { Delete, Edit, Search } from '@mui/icons-material'
 import { Tenant } from '@/utils/interfaces'
 import { ActionButtons } from '@/components/ActionButtons'
-import { getAllTenants, postTenant } from '@/hooks/tenant/useTenant'
+import {
+  deleteTenant,
+  getAllTenants,
+  postTenant,
+  updateTenant,
+} from '@/hooks/tenant/useTenant'
 import { getAllPlans } from '@/hooks/plan/usePlan'
 import { getAllCountries } from '@/hooks/country/useCountries'
 
-import ModalCriar from './ModalCriar'
-import ModalEditar from './ModalEditar'
+import ModalTenant from '../Components/Modal'
+import AlertDelete from '@/components/Alerts/AlertDelete'
 
 const Tabela: React.FC = () => {
   const [tenants, setTenants] = useState<Tenant[]>([])
@@ -72,15 +77,18 @@ const Tabela: React.FC = () => {
   const handleOpenAddModal = () => setOpenAddModal(true)
   const handleCloseAddModal = () => setOpenAddModal(false)
 
+  const handleCloseEditModal = () => setOpenEditModal(false)
   const handleOpenEditModal = (tenant: Tenant) => {
     setEditTenant(tenant)
     setOpenEditModal(true)
   }
 
-  const handleCloseEditModal = () => setOpenEditModal(false)
-
-  const handleDelete = (id: number) => {
-    setTenants(tenants.filter((tenant) => tenant.id !== id))
+  const handleDelete = async (id: number): Promise<boolean> => {
+    const success = await deleteTenant(id)
+    if (success) {
+      setTenants(tenants.filter((tenant) => tenant.id !== id))
+    }
+    return success
   }
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +103,24 @@ const Tabela: React.FC = () => {
     postTenant(newTenant)
     setTenants([...tenants, newTenant])
     setOpenAddModal(false)
+    setNewTenant({
+      id: 0,
+      planId: 0,
+      countryId: 0,
+      statusId: 1,
+      signature: '',
+      expiration: '',
+      name: '',
+      cellphone: null,
+      CNPJ: '',
+      address: null,
+    })
+  }
+
+  const editExistingTenant = (tenant: Tenant) => {
+    updateTenant(tenant)
+    setTenants(tenants.map((t) => (t.id === tenant.id ? tenant : t)))
+    setOpenEditModal(false)
   }
 
   return (
@@ -141,7 +167,9 @@ const Tabela: React.FC = () => {
                     <Edit />
                   </IconButton>
                   <IconButton
-                    onClick={() => handleDelete(tenant.id)}
+                    onClick={() =>
+                      AlertDelete(handleDelete, tenant.id, tenant.name)
+                    }
                     color="error"
                   >
                     <Delete />
@@ -153,24 +181,25 @@ const Tabela: React.FC = () => {
         </Table>
       </TableContainer>
 
-      <ModalCriar
+      <ModalTenant
         open={openAddModal}
         onClose={handleCloseAddModal}
-        newTenant={newTenant}
-        setNewTenant={setNewTenant}
-        saveTenant={() => addNewTenant(newTenant)}
+        item={newTenant}
+        setItem={setNewTenant}
+        saveChanges={() => addNewTenant(newTenant)}
         plans={plans}
         countries={countries}
+        isEditing={false}
       />
-
-      <ModalEditar
+      <ModalTenant
         open={openEditModal}
         onClose={handleCloseEditModal}
-        editTenant={editTenant}
-        setEditTenant={setEditTenant}
-        handleUpdate={() => {}}
+        item={editTenant}
+        setItem={setEditTenant}
+        saveChanges={() => editExistingTenant(editTenant)}
         plans={plans}
         countries={countries}
+        isEditing={true}
       />
     </div>
   )

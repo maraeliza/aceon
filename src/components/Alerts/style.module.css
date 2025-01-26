@@ -1,0 +1,10 @@
+.swal2-confirm.swalButtonDelete {
+  background-color: red !important;
+  border-color: red;
+  color: white;
+}
+
+.swalButtonDelete:hover {
+  background-color: darkred;
+  border-color: darkred;
+}
