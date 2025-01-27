@@ -33,7 +33,7 @@ const branding: Branding = {
 }
 
 export default function DashboardLayoutBasic(props: DemoProps) {
-  const [pathname, setPathname] = React.useState('/login')
+  const [pathname, setPathname] = React.useState('/tenants')
   const { window } = props
   const demoWindow = window !== undefined ? window() : undefined
 

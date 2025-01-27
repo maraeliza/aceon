@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Modal,
   Box,
@@ -11,16 +11,15 @@ import {
 import { InputMask } from '@react-input/mask'
 import { useForm, Controller } from 'react-hook-form'
 import { Country, Plan, Tenant } from '@/utils/interfaces'
-import { tenantSchema } from '@/utils/schemas' 
-import { zodResolver } from '@hookform/resolvers/zod' 
+import { tenantSchema } from '@/utils/schemas'
+import { zodResolver } from '@hookform/resolvers/zod'
 import styles from '@/styles/inputs.module.css'
 
 interface ModalProps {
   open: boolean
   onClose: () => void
-  item: Tenant
-  setItem: React.Dispatch<React.SetStateAction<Tenant>>
-  saveChanges: () => void
+  item?: Tenant
+  saveChanges: (item: Tenant) => void
   plans: Plan[]
   countries: Country[]
   isEditing: boolean
@@ -30,37 +29,45 @@ const ModalTenant = ({
   open,
   onClose,
   item,
-  setItem,
   saveChanges,
   plans,
   countries,
   isEditing,
 }: ModalProps) => {
-  const defaultValues = {
-    id: isEditing ? item.id : 0,
-    planId: isEditing ? item.planId : 1,
-    countryId: 1,
-    statusId: 1,
-    signature: '',
-    expiration: '',
-    name: isEditing ? item.name : '',
-    cellphone: '',
-    CNPJ: '',
-    address: '',
-  }
+  const defaultValues = isEditing && item
+    ? item
+    : {
+        id: 0,
+        planId: 1,
+        countryId: 1,
+        statusId: 1,
+        signature: '',
+        expiration: '',
+        name: '',
+        cellphone: '',
+        CNPJ: '',
+        address: '',
+      }
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: zodResolver(tenantSchema),
     defaultValues,
   })
 
+  useEffect(() => {
+    if (open) {
+      reset(item)
+    }
+  }, [open, reset, item])
+
   const onSubmit = (data: Tenant) => {
-    saveChanges()
-    setItem(data)
+    console.log(data)
+    saveChanges({...data, id: item?.id || 0, statusId: 1})
   }
 
   return (
@@ -99,6 +106,9 @@ const ModalTenant = ({
                       size="small"
                       error={!!errors.name}
                       helperText={errors.name ? errors.name.message : ''}
+                      onChange={(e) => {
+                        field.onChange(e.target.value || '')
+                      }}
                     />
                   )}
                 />
@@ -127,6 +137,9 @@ const ModalTenant = ({
                           placeholder="(XX) XXXXX-XXXX"
                           id="cellphone"
                           value={field.value as string}
+                          onChange={(e) => {
+                            field.onChange(e.target.value || '')
+                          }}
                         />
                         {errors.cellphone && (
                           <Typography
@@ -136,7 +149,7 @@ const ModalTenant = ({
                             marginTop={1}
                             paddingLeft={2}
                           >
-                            {errors.cellphone.message}{' '}
+                            {errors.cellphone.message}
                           </Typography>
                         )}
                       </>
@@ -165,6 +178,9 @@ const ModalTenant = ({
                           replacement={{ _: /\d/ }}
                           placeholder="CNPJ: XX.XXX.XXX/XXXX-XX"
                           id="cnpj"
+                          onChange={(e) => {
+                            field.onChange(e.target.value || '')
+                          }}
                         />
                         {errors.CNPJ && (
                           <Typography
@@ -174,7 +190,7 @@ const ModalTenant = ({
                             marginTop={1}
                             paddingLeft={2}
                           >
-                            {errors.CNPJ.message}{' '}
+                            {errors.CNPJ.message}
                           </Typography>
                         )}
                       </>
@@ -205,6 +221,9 @@ const ModalTenant = ({
                           shrink: true,
                         },
                       }}
+                      onChange={(e) => {
+                        field.onChange(e.target.value || '')
+                      }}
                     />
                   )}
                 />
@@ -229,6 +248,9 @@ const ModalTenant = ({
                           shrink: true,
                         },
                       }}
+                      onChange={(e) => {
+                        field.onChange(e.target.value || '')
+                      }}
                     />
                   )}
                 />
@@ -245,10 +267,10 @@ const ModalTenant = ({
                     options={plans}
                     getOptionLabel={(option) => option.name}
                     value={
-                      plans.find((plan) => plan.id === item.planId) || null
+                      plans.find((plan) => plan.id === field.value) || null
                     }
                     onChange={(_, value) =>
-                      setItem({ ...item, planId: value?.id || 0 })
+                      field.onChange(value ? value.id : null)
                     }
                     renderInput={(params) => (
                       <TextField
@@ -278,6 +300,9 @@ const ModalTenant = ({
                       size="small"
                       error={!!errors.address}
                       helperText={errors.address ? errors.address.message : ''}
+                      onChange={(e) => {
+                        field.onChange(e.target.value || '')
+                      }}
                     />
                   )}
                 />
@@ -293,11 +318,11 @@ const ModalTenant = ({
                       getOptionLabel={(option) => option.name}
                       value={
                         countries.find(
-                          (country) => country.country_id === item.countryId,
+                          (country) => country.country_id === field.value,
                         ) || null
                       }
                       onChange={(_, value) => {
-                        field.onChange(value ? value.country_id : null)
+                        field.onChange(value?.country_id || 0)
                       }}
                       renderInput={(params) => (
                         <TextField

@@ -1,3 +1,5 @@
+import AlertError from '@/components/Alerts/AlertError'
+import AlertSucess from '@/components/Alerts/AlertSucess'
 import { fmtDate, formatCNPJ, formatPhoneNumber } from '@/utils/funcs'
 import { Tenant } from '@/utils/interfaces'
 
@@ -42,10 +44,21 @@ export const postTenant = async (newTenant: Tenant) => {
 
     if (response.ok) {
       const data = await response.json()
+      AlertSucess(
+        'Sucesso',
+        `A empresa ${newTenant.name} foi cadastrada com sucesso`,
+      )
+
       console.log('Tenant adicionado com sucesso:', data)
       return data
     } else {
       console.error('Erro ao adicionar tenant:', response.statusText)
+      const errorData = await response.json()
+
+      AlertError(
+        'Erro',
+        `Não foi possível cadastrar a empresa ${newTenant.name}. Erro:  ${errorData.message}`,
+      )
     }
   } catch (error) {
     console.error('Erro ao enviar os dados:', error)
@@ -67,6 +80,12 @@ export const deleteTenant = async (id: number) => {
       return true
     } else {
       console.error('Erro ao deletar tenant:', response.statusText)
+      const errorData = await response.json()
+
+      AlertError(
+        'Erro',
+        `Não foi possível deletar a empresa de id ${id}. Erro:  ${errorData.message}`,
+      )
       return false
     }
   } catch (error) {
@@ -75,7 +94,7 @@ export const deleteTenant = async (id: number) => {
   }
 }
 
-export const updateTenant = async (updatedTenant: Tenant) => {
+export const updateTenant = async (updatedTenant: Tenant): Promise<boolean> => {
   try {
     const tenantData = {
       planId: updatedTenant.planId,
@@ -105,14 +124,23 @@ export const updateTenant = async (updatedTenant: Tenant) => {
     if (response.ok) {
       const data = await response.json()
       console.log('Tenant atualizado com sucesso:', data)
-
-      return data
+      AlertSucess(
+        'Sucesso',
+        `As alterações em ${updatedTenant.name} foram salvas com sucesso`,
+      )
+      return true
     } else {
-      console.error('Erro ao atualizar tenant:', response.statusText)
-      return null
+      const errorData = await response.json() // Aqui você acessa o corpo da resposta de erro
+      console.error('Erro ao atualizar tenant:', errorData.message) // Acessa a mensagem de erro do backend
+
+      AlertError(
+        'Erro',
+        `Não foi possível salvar as alterações em ${updatedTenant.name}. Erro:  ${errorData.message}`,
+      )
+      return false
     }
   } catch (error) {
     console.error('Erro ao enviar os dados para atualização:', error)
-    return null
+    return false
   }
 }

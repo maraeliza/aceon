@@ -33,18 +33,7 @@ const Tabela: React.FC = () => {
 
   const [openAddModal, setOpenAddModal] = useState<boolean>(false)
   const [openEditModal, setOpenEditModal] = useState<boolean>(false)
-  const [newTenant, setNewTenant] = useState<Tenant>({
-    id: 0,
-    planId: 0,
-    countryId: 0,
-    statusId: 1,
-    signature: '',
-    expiration: '',
-    name: '',
-    cellphone: null,
-    CNPJ: '',
-    address: null,
-  })
+
   const [editTenant, setEditTenant] = useState<Tenant>({
     id: 0,
     planId: 0,
@@ -99,27 +88,19 @@ const Tabela: React.FC = () => {
     setTenants(filtered)
   }
 
-  const addNewTenant = (newTenant: Tenant) => {
-    postTenant(newTenant)
-    setTenants([...tenants, newTenant])
+  const addNewTenant = async (newTenant: Tenant) => {
+    const dataResponse = await postTenant(newTenant)
+    if (dataResponse?.tenant) {
+      setTenants([...tenants, { ...newTenant, id: dataResponse?.tenant?.id }])
+    }
     setOpenAddModal(false)
-    setNewTenant({
-      id: 0,
-      planId: 0,
-      countryId: 0,
-      statusId: 1,
-      signature: '',
-      expiration: '',
-      name: '',
-      cellphone: null,
-      CNPJ: '',
-      address: null,
-    })
   }
 
-  const editExistingTenant = (tenant: Tenant) => {
-    updateTenant(tenant)
-    setTenants(tenants.map((t) => (t.id === tenant.id ? tenant : t)))
+  const editExistingTenant = async (tenant: Tenant) => {
+    const sucesss = await updateTenant(tenant)
+    if (sucesss) {
+      setTenants(tenants.map((t) => (t.id === tenant.id ? tenant : t)))
+    }
     setOpenEditModal(false)
   }
 
@@ -148,6 +129,7 @@ const Tabela: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Nome</TableCell>
               <TableCell>Assinatura</TableCell>
               <TableCell>Vencimento</TableCell>
@@ -158,6 +140,7 @@ const Tabela: React.FC = () => {
           <TableBody>
             {tenants.map((tenant) => (
               <TableRow key={tenant.id}>
+                <TableCell>{tenant.id}</TableCell>
                 <TableCell>{tenant.name}</TableCell>
                 <TableCell>{tenant.signature}</TableCell>
                 <TableCell>{tenant.expiration}</TableCell>
@@ -184,9 +167,7 @@ const Tabela: React.FC = () => {
       <ModalTenant
         open={openAddModal}
         onClose={handleCloseAddModal}
-        item={newTenant}
-        setItem={setNewTenant}
-        saveChanges={() => addNewTenant(newTenant)}
+        saveChanges={addNewTenant}
         plans={plans}
         countries={countries}
         isEditing={false}
@@ -195,8 +176,7 @@ const Tabela: React.FC = () => {
         open={openEditModal}
         onClose={handleCloseEditModal}
         item={editTenant}
-        setItem={setEditTenant}
-        saveChanges={() => editExistingTenant(editTenant)}
+        saveChanges={editExistingTenant}
         plans={plans}
         countries={countries}
         isEditing={true}

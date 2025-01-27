@@ -20,11 +20,7 @@ const AlertDelete = async (
       if (success) {
         Swal.fire('Deletado!', `${name} foi deletado com sucesso.`, 'success')
       } else {
-        Swal.fire(
-          'Erro!',
-          `Não foi possível deletar ${name}! \nTente novamente mais tarde!`,
-          'error',
-        )
+       
       }
     }
   })
