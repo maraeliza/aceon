@@ -1,15 +1,38 @@
-import { Box, IconButton, Tooltip } from '@mui/material'
+import { Badge, Box, IconButton, Tooltip } from '@mui/material'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import SaveAltIcon from '@mui/icons-material/SaveAlt'
-import AddIcon from '@mui/icons-material/Add' // Certificando-se de importar o ícone de adicionar
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete' // Ícone de lixeira
 
 // Tipagem correta para a função passada como parâmetro
 interface ActionButtonsProps {
+  selectedSize: number
   handleOpenAddModal: () => void
+  handleDeleteSelected: () => void // Função para deletar os selecionados
+  handleExportPDF: () => void
+  handleExportExcel: () => void
+  handleOpenFilter: () => void
 }
 
-export const ActionButtons = ({ handleOpenAddModal }: ActionButtonsProps) => {
+export const ActionButtons = ({
+  handleOpenAddModal,
+  selectedSize,
+  handleDeleteSelected,
+  handleExportPDF,
+  handleExportExcel,
+  handleOpenFilter,
+}: ActionButtonsProps) => {
+  let auxText = ''
+  if (selectedSize > 0) {
+    auxText += '(apenas '
+    if (selectedSize === 1) {
+      auxText += ' o item selecionado)'
+    } else {
+      auxText += ` os ${selectedSize} itens selecionados)`
+    }
+  }
+
   return (
     <Box
       gap={2}
@@ -20,26 +43,65 @@ export const ActionButtons = ({ handleOpenAddModal }: ActionButtonsProps) => {
         margin: 10,
       }}
     >
-      <Tooltip title="Exportar para PDF">
+      {selectedSize > 0 && (
+        <Tooltip
+          title={`Excluir ${`${selectedSize} ${selectedSize === 1 ? 'item' : 'itens'} selecionado${selectedSize > 1 ? 's' : ''}`} `}
+        >
+          <IconButton
+            onClick={handleDeleteSelected}
+            sx={{
+              backgroundColor: '#000',
+              color: 'white',
+              borderRadius: '8px',
+              '&:hover': {
+                backgroundColor: '#300',
+                transform: 'scale(1.1)',
+              },
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              padding: 1.5,
+            }}
+          >
+            <Badge
+              badgeContent={selectedSize}
+              color="secondary"
+              overlap="circular"
+              variant="dot"
+            >
+              <DeleteIcon />
+            </Badge>
+          </IconButton>
+        </Tooltip>
+      )}
+
+      <Tooltip title={`Exportar para PDF ${auxText}`}>
         <IconButton
+          onClick={handleExportPDF}
           sx={{
             backgroundColor: '#d32f2f',
             color: 'white',
             borderRadius: '8px',
             '&:hover': {
-              backgroundColor: '#b71c1c',
+              backgroundColor: '#c62828',
               transform: 'scale(1.1)',
             },
             boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
             padding: 1.5,
           }}
         >
-          <PictureAsPdfIcon />
+          <Badge
+            badgeContent={selectedSize}
+            color="secondary"
+            overlap="circular"
+            variant="dot"
+          >
+            <PictureAsPdfIcon />
+          </Badge>
         </IconButton>
       </Tooltip>
 
-      <Tooltip title="Exportar em Excel">
+      <Tooltip title={`Exportar para Excel ${auxText}`}>
         <IconButton
+          onClick={handleExportExcel}
           sx={{
             backgroundColor: '#1976d2',
             color: 'white',
@@ -52,12 +114,21 @@ export const ActionButtons = ({ handleOpenAddModal }: ActionButtonsProps) => {
             padding: 1.5,
           }}
         >
-          <SaveAltIcon />
+          <Badge
+            badgeContent={selectedSize}
+            color="secondary"
+            overlap="circular"
+            variant="dot"
+          >
+            <SaveAltIcon />
+          </Badge>
         </IconButton>
       </Tooltip>
 
+      {/* Tooltip para Filtrar */}
       <Tooltip title="Filtrar">
         <IconButton
+          onClick={handleOpenFilter}
           sx={{
             backgroundColor: '#ff9800',
             color: 'white',
@@ -80,7 +151,7 @@ export const ActionButtons = ({ handleOpenAddModal }: ActionButtonsProps) => {
           sx={{
             backgroundColor: '#4caf50',
             color: 'white',
-            borderRadius: '8px', 
+            borderRadius: '8px',
             '&:hover': {
               backgroundColor: '#388e3c',
               transform: 'scale(1.1)',

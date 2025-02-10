@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ChangeEventHandler } from 'react'
 import {
   Table,
   TableBody,
@@ -11,13 +11,22 @@ import {
   IconButton,
   InputAdornment,
   Typography,
+  Checkbox,
+  Pagination,
+  TablePagination,
+  PaginationItem,
 } from '@mui/material'
+
 import { Delete, Edit, Search } from '@mui/icons-material'
 import { Tenant } from '@/utils/interfaces'
 import { ActionButtons } from '@/components/ActionButtons'
 import {
   deleteTenant,
+  deleteTenants,
+  downloadTenantsExcel,
+  downloadTenantsPDF,
   getAllTenants,
+  getAlltenantsPaged,
   postTenant,
   updateTenant,
 } from '@/hooks/tenant/useTenant'
@@ -29,10 +38,15 @@ import AlertDelete from '@/components/Alerts/AlertDelete'
 
 const Tabela: React.FC = () => {
   const [tenants, setTenants] = useState<Tenant[]>([])
+  const [allTenants, setAllTenants] = useState<Tenant[]>([])
+  const [selectedTenants, setSelectedTenants] = useState<Set<number>>(new Set())
   const [searchTerm, setSearchTerm] = useState<string>('')
 
   const [openAddModal, setOpenAddModal] = useState<boolean>(false)
   const [openEditModal, setOpenEditModal] = useState<boolean>(false)
+  const [page, setPage] = useState<number>(0)
+  const [perPage, setPerPage] = useState<number>(3)
+  const [totalPages, setTotalPages] = useState<number>(1)
 
   const [editTenant, setEditTenant] = useState<Tenant>({
     id: 0,
@@ -51,15 +65,23 @@ const Tabela: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const tenantsPagedData = await getAlltenantsPaged(page, perPage)
+      setTenants(tenantsPagedData.tenants)
+      setTotalPages(tenantsPagedData.pagination.totalPages)
+    }
+
+    fetchData()
+  }, [page, perPage])
+
+  useEffect(() => {
+    const fetchData = async () => {
       const tenantsData = await getAllTenants()
       const plansData = await getAllPlans()
       const countriesData = await getAllCountries()
-
-      setTenants(tenantsData)
+      setAllTenants(tenantsData)
       setPlans(plansData)
       setCountries(countriesData)
     }
-
     fetchData()
   }, [])
 
@@ -76,17 +98,55 @@ const Tabela: React.FC = () => {
     const success = await deleteTenant(id)
     if (success) {
       setTenants(tenants.filter((tenant) => tenant.id !== id))
+      setSelectedTenants(new Set())
     }
     return success
   }
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
-    const filtered = tenants.filter((tenant) =>
+    const filtered = allTenants?.filter((tenant) =>
       tenant.name.toLowerCase().includes(event.target.value.toLowerCase()),
     )
     setTenants(filtered)
   }
+
+  const handleSelectTenant = (id: number) => {
+    const newSelectedTenants = new Set(selectedTenants)
+    if (newSelectedTenants.has(id)) {
+      newSelectedTenants.delete(id)
+    } else {
+      newSelectedTenants.add(id)
+    }
+    setSelectedTenants(newSelectedTenants)
+  }
+
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      setSelectedTenants(new Set(tenants.map((tenant) => tenant.id)))
+    } else {
+      setSelectedTenants(new Set())
+    }
+  }
+
+  const handleDeleteSelected = async () => {
+    const selectedIds = Array.from(selectedTenants)
+    const success = await deleteTenants(selectedIds)
+    if (success) {
+      setTenants((prevTenants) =>
+        prevTenants.filter((tenant) => !selectedIds.includes(tenant.id)),
+      )
+      setSelectedTenants(new Set())
+    }
+  }
+
+  const handleExportPDF = async () => {
+    downloadTenantsPDF()
+  }
+  const handleExportExcel = async () => {
+    downloadTenantsExcel()
+  }
+  const handleOpenFilter = async () => {}
 
   const addNewTenant = async (newTenant: Tenant) => {
     const dataResponse = await postTenant(newTenant)
@@ -97,12 +157,22 @@ const Tabela: React.FC = () => {
   }
 
   const editExistingTenant = async (tenant: Tenant) => {
-    const sucesss = await updateTenant(tenant)
-    if (sucesss) {
+    const success = await updateTenant(tenant)
+    if (success) {
       setTenants(tenants.map((t) => (t.id === tenant.id ? tenant : t)))
     }
     setOpenEditModal(false)
   }
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
 
   return (
     <div>
@@ -114,21 +184,36 @@ const Tabela: React.FC = () => {
         fullWidth
         size="small"
         margin="normal"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Search />
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+          },
         }}
       />
 
-      <ActionButtons handleOpenAddModal={handleOpenAddModal} />
+      <ActionButtons
+        handleOpenAddModal={handleOpenAddModal}
+        selectedSize={selectedTenants.size}
+        handleExportPDF={handleExportPDF}
+        handleExportExcel={handleExportExcel}
+        handleOpenFilter={handleOpenFilter}
+        handleDeleteSelected={handleDeleteSelected}
+      />
 
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>
+                <Checkbox
+                  onChange={handleSelectAll}
+                  checked={selectedTenants.size === tenants.length}
+                />
+              </TableCell>
               <TableCell>ID</TableCell>
               <TableCell>Nome</TableCell>
               <TableCell>Assinatura</TableCell>
@@ -140,6 +225,12 @@ const Tabela: React.FC = () => {
           <TableBody>
             {tenants.map((tenant) => (
               <TableRow key={tenant.id}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedTenants.has(tenant.id)}
+                    onChange={() => handleSelectTenant(tenant.id)}
+                  />
+                </TableCell>
                 <TableCell>{tenant.id}</TableCell>
                 <TableCell>{tenant.name}</TableCell>
                 <TableCell>{tenant.signature}</TableCell>
@@ -163,6 +254,17 @@ const Tabela: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <TablePagination
+        rowsPerPageOptions={[3, 5, 10, { label: 'Todos', value: -1 }]}
+        component="div"
+        count={allTenants.length}
+        rowsPerPage={perPage}
+        page={page}
+       
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
 
       <ModalTenant
         open={openAddModal}

@@ -1,7 +1,7 @@
 import AlertError from '@/components/Alerts/AlertError'
 import AlertSucess from '@/components/Alerts/AlertSucess'
 import { fmtDate, formatCNPJ, formatPhoneNumber } from '@/utils/funcs'
-import { Tenant } from '@/utils/interfaces'
+import { Pagination, Tenant } from '@/utils/interfaces'
 
 export const getAllTenants = async (): Promise<Tenant[]> => {
   const response = await fetch('http://localhost:8080/tenants/')
@@ -19,6 +19,96 @@ export const getAllTenants = async (): Promise<Tenant[]> => {
     address: tenant.address,
   }))
   return tenants
+}
+
+export const getAlltenantsPaged = async (
+  page: number = 1,
+  limit: number = 10,
+): Promise<{ tenants: Tenant[]; pagination: Pagination }> => {
+  const response = await fetch(
+    `http://localhost:8080/tenants/paged?page=${page}&limit=${limit}`,
+  )
+  const data = await response.json()
+
+  const tenants: Tenant[] = data.tenants.map((tenant: any) => ({
+    id: tenant.id,
+    planId: tenant.plan_id,
+    countryId: tenant.country_id,
+    statusId: tenant.status_id,
+    signature: fmtDate(tenant.signature),
+    expiration: fmtDate(tenant.expiration),
+    name: tenant.name,
+    cellphone: formatPhoneNumber(tenant.cellphone),
+    CNPJ: formatCNPJ(tenant.CNPJ),
+    address: tenant.address,
+  }))
+
+  return {
+    tenants,
+    pagination: data.pagination,
+  }
+}
+
+export const getDataDashboard = async () => {
+  try {
+    const planResponse = await fetch(
+      'http://localhost:8080/tenants/companies-by-plan',
+    )
+    const planData = await planResponse.json()
+
+    const dateResponse = await fetch(
+      'http://localhost:8080/tenants/companies-by-signature-date',
+    )
+    const dateData = await dateResponse.json()
+
+    return { planData, dateData }
+  } catch (error) {
+    console.error('Erro ao buscar os dados da API', error)
+  }
+}
+export const downloadTenantsExcel = async (): Promise<void> => {
+  console.log('ACESSANDO ESSA API')
+  const response = await fetch('http://localhost:8080/tenants/export-excel', {
+    method: 'GET',
+  })
+
+  if (response.ok) {
+    const blob = await response.blob()
+
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'tenants.xlsx')
+    document.body.appendChild(link)
+    link.click()
+
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  } else {
+    console.error('Falha ao baixar o arquivo Excel:', response.statusText)
+  }
+}
+export const downloadTenantsPDF = async (): Promise<void> => {
+  console.log('ACESSANDO ESSA API')
+  const response = await fetch('http://localhost:8080/tenants/export-pdf', {
+    method: 'GET',
+  })
+
+  if (response.ok) {
+    const blob = await response.blob()
+
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'relatorio_empresas.pdf')
+    document.body.appendChild(link)
+    link.click()
+
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  } else {
+    console.error('Falha ao baixar o arquivo PDF:', response.statusText)
+  }
 }
 
 export const postTenant = async (newTenant: Tenant) => {
@@ -85,6 +175,41 @@ export const deleteTenant = async (id: number) => {
       AlertError(
         'Erro',
         `Não foi possível deletar a empresa de id ${id}. Erro:  ${errorData.message}`,
+      )
+      return false
+    }
+  } catch (error) {
+    console.error('Erro ao enviar a requisição:', error)
+    return false
+  }
+}
+export const deleteTenants = async (ids: number[]) => {
+  try {
+    console.log('IDs enviados à API:', ids)
+
+    const response = await fetch(
+      'http://localhost:8080/tenants/delete-multiple',
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ids }), // Passando os IDs no corpo da requisição
+      },
+    )
+
+    console.log(response)
+
+    if (response.ok) {
+      console.log(`${ids.length} tenants deletados com sucesso`)
+      return true
+    } else {
+      console.error('Erro ao deletar tenants:', response.statusText)
+      const errorData = await response.json()
+
+      AlertError(
+        'Erro',
+        `Não foi possível deletar as empresas de IDs ${ids.join(', ')}. Erro: ${errorData.message}`,
       )
       return false
     }

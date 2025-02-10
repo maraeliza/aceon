@@ -100,3 +100,10 @@ export interface Plan {
   description: string
   price: number
 }
+
+export interface Pagination {
+  page: number;         // Página atual
+  limit: number;        // Itens por página
+  total: number;        // Total de itens
+  totalPages: number;   // Total de páginas
+}

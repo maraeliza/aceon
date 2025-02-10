@@ -7,22 +7,26 @@ import PageContent from '@/configs/configRoute'
 import PageLogin from './login'
 import PageRegister from './register/page'
 import { Image } from '@mui/icons-material'
+import { ptBR } from '@mui/material/locale'
 
-const demoTheme = createTheme({
-  cssVariables: {
-    colorSchemeSelector: 'data-toolpad-color-scheme',
-  },
-  colorSchemes: { light: true, dark: true },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 600,
-      lg: 1200,
-      xl: 1536,
+const demoTheme = createTheme(
+  {
+    cssVariables: {
+      colorSchemeSelector: 'data-toolpad-color-scheme',
+    },
+    colorSchemes: { light: true, dark: true },
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 600,
+        lg: 1200,
+        xl: 1536,
+      },
     },
   },
-})
+  ptBR,
+)
 
 interface DemoProps {
   window?: () => Window

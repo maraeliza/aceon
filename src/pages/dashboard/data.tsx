@@ -19,3 +19,12 @@ export const automationUsage = [
   { name: 'Other', value: 10 },
 ]
 export const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#d0ed57']
+export const COLORS_ACEON = [
+  "#C4E714",  // Amarelo
+  "#039678",
+  "#003C30",  // Verde escuro
+  "#D1F811",
+  "#039678",
+  "#C0D8D8",  // Cinza azulado claro
+  "#DEE2E3",  // Cinza
+];

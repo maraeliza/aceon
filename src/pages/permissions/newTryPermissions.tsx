@@ -84,8 +84,6 @@ const PermissionScreen: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Gerenciamento de Permissões
       </Typography>
-
-      {/* Tabs para alternar entre Usuário e Grupo */}
       <Box sx={{ width: '100%' }}>
         <Grid container spacing={2}>
           <Grid item xs={6}>
@@ -94,7 +92,7 @@ const PermissionScreen: React.FC = () => {
               fullWidth
               onClick={() => handleTabChange(0)}
             >
-              Usuário
+              Grupos
             </Button>
           </Grid>
           <Grid item xs={6}>
@@ -103,7 +101,7 @@ const PermissionScreen: React.FC = () => {
               fullWidth
               onClick={() => handleTabChange(1)}
             >
-              Grupo
+              Papéis
             </Button>
           </Grid>
         </Grid>
